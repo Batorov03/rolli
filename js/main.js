@@ -46,6 +46,8 @@ window.addEventListener('click', function (event) {
 		}
 	};
 })
+
+
 // Div внутри корзины, в который мы добавляем товары
 const cartWrapper = document.querySelector('.cart-wrapper');
 
@@ -53,6 +55,7 @@ const cartWrapper = document.querySelector('.cart-wrapper');
 window.addEventListener('click', function (event) {
 	// Проверяем что клик был совершен по кнопке "Добавить в корзину"
 	if (event.target.hasAttribute('data-cart')) {
+
 		// Находим карточку с товаром, внутри котрой был совершен клик
 		const card = event.target.closest('.card');
 
@@ -67,8 +70,18 @@ window.addEventListener('click', function (event) {
 			counter: card.querySelector('[data-counter]').innerText,
 		};
 
-		// Собранные данные подставим в шаблон для товара в корзине
-		const cartItemHTML = `<div class="cart-item" data-id="${productInfo.id}">
+		// Проверять если ли уже такой товар в корзине
+		const itemInCart = cartWrapper.querySelector(`[data-id="${productInfo.id}"]`);
+
+		// Если товар есть в корзине
+		if (itemInCart) {
+			const counterElement = itemInCart.querySelector('[data-counter]');
+			counterElement.innerText = parseInt(counterElement.innerText) + parseInt(productInfo.counter);
+		} else {
+			// Если товара нет в корзине
+
+			// Собранные данные подставим в шаблон для товара в корзине
+			const cartItemHTML = `<div class="cart-item" data-id="${productInfo.id}">
 								<div class="cart-item__top">
 									<div class="cart-item__img">
 										<img src="${productInfo.imgSrc}" alt="${productInfo.title}">
@@ -97,9 +110,17 @@ window.addEventListener('click', function (event) {
 								</div>
 							</div>`;
 
-		// Отобразим товар в корзине
-		cartWrapper.insertAdjacentHTML('beforeend', cartItemHTML);
+			// Отобразим товар в корзине
+			cartWrapper.insertAdjacentHTML('beforeend', cartItemHTML);
+		}
+
+		// Сбрасываем счетчик добавленного товара на "1"
+		card.querySelector('[data-counter]').innerText = '1';
+
+
+
 	}
 });
+
 
 
